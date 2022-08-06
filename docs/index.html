@@ -373,6 +373,17 @@ table.popup-table {
   
 }
 
+
+#radar-info-debug {
+  position: absolute;
+  top: calc( 50vh - 40vmin);
+  right: calc( 50vw - 40vmin);
+  width: 40vmin;
+  font-size: 0.5em;
+  text-align: right;
+  color: var(--text-color);
+}
+
 </style>
 <body>
 
@@ -399,6 +410,7 @@ table.popup-table {
   <div id='radar-info-zl'>---</div>
   <div id='radar-info-target'>---</div>
   <div id='radar-info-target2'>---</div>
+  <div id='radar-info-debug'></div>
 </div>
   
 <script>
@@ -760,6 +772,11 @@ const calcTargetDirection = () => {
   const dy = p1.y - p2.y;
   
   const theta = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
+  
+  document.getElementById("radar-info-debug").innerHTML = `diff ${Math.floor(dx)}/${Math.floor(dy)}<br>`
+                                                        + `_p1c ${Math.floor(p1.x)}/${Math.floor(p1.y)}<br>`
+                                                        + `_p2t ${Math.floor(p2.x)}/${Math.floor(p2.y)}<br>`
+                                                        + `_theta ${Math.floor(theta)}deg<br>`;
   
   return theta;
   
