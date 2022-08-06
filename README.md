@@ -3,6 +3,8 @@
 
 https://mghs15.github.io/radar-scan-decoration-webmap/
 
+上記のでもサイトは基準点をスキャンするようなイメージです。もちろん実際はスキャンなんてしていません。Web地図としてはたいそう使いにくいです。
+
 ## 参考文献
 * https://developer.mozilla.org/ja/
 * https://docs.mapbox.com/
