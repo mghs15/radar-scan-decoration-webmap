@@ -207,7 +207,7 @@ table.popup-table {
   margin-left: 2vmin;
   width: 40vmin;
   height: 2em;
-  font-size: 0.5em;
+  font-size: 0.8em;
   color: var(--text-color);
 }
 
@@ -218,71 +218,67 @@ table.popup-table {
   margin-left: 2vmin;
   width: 40vmin;
   height: 2em;
-  font-size: 0.5em;
+  font-size: 0.8em;
   color: var(--text-color);
 }
 
 
 #radar-info-addr {
   position: absolute;
-  top: calc( 50% + 40vmin + 0.5em );
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80vmin;
-  height: 2em;
-  text-align: center;
+  bottom: calc( 50% - 50vmin );
+  left: calc( 50% - 50vmin );
+  padding: 2vmin;
+  width: 40vmin;
+  font-size: 0.8em;
+  text-align: left;
   color: var(--text-color);
 }
 
 
 #radar-info-rot {
   position: absolute;
-  bottom: calc( 50% + 40vmin );
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80vmin;
-  height: 2em;
-  text-align: center;
-  color: var(--text-color);
-}
-
-
-#radar-info-zl {
-  position: absolute;
-  bottom: calc( 50% - 40vmin);
-  right: calc( 50% - 40vmin);
+  top: calc( 50% - 50vmin);
+  right: calc( 50% - 50vmin);
+  padding: 2vmin;
   width: 40vmin;
-  font-size: 0.5em;
+  font-size: 0.8em;
   text-align: right;
   color: var(--text-color);
 }
 
 
+#radar-info-time {
+  position: absolute;
+  bottom: calc( 50% - 50vmin );
+  right: calc( 50% - 50vmin );
+  padding: 2vmin;
+  width: 40vmin;
+  font-size: 0.8em;
+  text-align: right;
+  color: var(--text-color);
+}
+
+#radar-info-target2 {
+  position: absolute;
+  top: calc( 50% - 50vmin );
+  left: calc( 50% - 50vmin );
+  padding: 2vmin;
+  width: 40vmin;
+  font-size: 0.8em;
+  color: var(--text-color);
+}
+
 #radar-info-target {
   position: absolute;
-  left: calc( 50% - 10vmin);
-  top: calc( 50% - 39vmin);
+  left: calc( 50% - 10vmin );
+  top: calc( 50% - 39vmin );
   width: 20vmin;
   height: 3vmin;
-  font-size: 0.5em;
+  font-size: 0.8em;
   text-align: center;
   color: var(--main-color);
   transform-origin: 50% 39vmin;
   transform: rotate(90deg);
-}
-
-
-#radar-info-target2 {
-  position: absolute;
-  top: calc( 50% - 40vmin);
-  left: calc( 50% - 40vmin);
-  width: 40vmin;
-  font-size: 0.5em;
-  color: var(--text-color);
 }
 
 #radar-direction {
@@ -309,10 +305,10 @@ table.popup-table {
 
 #radar-info-debug {
   position: absolute;
-  top: calc( 50% - 40vmin);
-  right: calc( 50% - 40vmin);
+  top: calc( 50% - 40vmin );
+  right: calc( 50% - 40vmin );
   width: 40vmin;
-  font-size: 0.5em;
+  font-size: 0.8em;
   text-align: right;
   color: var(--text-color);
 }
@@ -340,7 +336,7 @@ table.popup-table {
   <div id='radar-info-elev'>---</div>
   <div id='radar-info-lnglat'>---/---</div>
   <div id='radar-info-addr'>---</div>
-  <div id='radar-info-zl'>---</div>
+  <div id='radar-info-time'>---</div>
   <div id='radar-info-target'>---</div>
   <div id='radar-info-target2'>---</div>
   <div id='radar-info-debug'></div>
@@ -402,16 +398,17 @@ map.on('move', () => {
 
 const timer = () => {
   
-  const zl = map.getZoom();
+  
   
   const date = new Date();
   const day = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}` 
   const tim = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
   
-  document.getElementById("radar-info-zl").innerHTML = `z ${Math.floor(zl*100)/100}<br>${day}<br>${tim}`;
+  document.getElementById("radar-info-time").innerHTML = `${day}<br>${tim}`;
   
+  const zl = map.getZoom();
   const ber = map.getBearing();
-  document.getElementById("radar-info-rot").innerHTML = `${Math.floor(ber*100)/100}°`;
+  document.getElementById("radar-info-rot").innerHTML = `z ${Math.floor(zl*100)/100}<br>${Math.floor(ber*100)/100}°`;
 }
 
 setInterval(timer, 1000);
@@ -563,7 +560,7 @@ map.on('moveend', () => {
       document.getElementById( "radar-info-addr" ).innerText = "---";
     }else{
       const p = hitFeature.properties;
-      document.getElementById( "radar-info-addr" ).innerHTML = `${p.pref}${p.muni}${p.LV01}`;
+      document.getElementById( "radar-info-addr" ).innerHTML = `${p.pref}<br>${p.muni}<br>${p.LV01}`;
     }  
   })
   .catch( e => {
