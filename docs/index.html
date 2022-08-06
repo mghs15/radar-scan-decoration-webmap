@@ -331,12 +331,15 @@ table.popup-table {
 
 #radar-info-target {
   position: absolute;
-  top: calc( 50vh - 40vmin);
-  right: calc( 50vw - 40vmin);
-  width: 40vmin;
+  left: calc( 50vw - 40vmin);
+  top: calc( 50vh - 39vmin);
+  width: 80vmin;
+  height: 3vmin;
   font-size: 0.5em;
-  text-align: right;
-  color: var(--text-color);
+  text-align: center;
+  color: var(--main-color);
+  transform-origin: 50% 39vmin;
+  transform: rotate(90deg);
 }
 
 
@@ -638,11 +641,14 @@ map.on('moveend', () => {
 // Define the animation.
 const animateMarker = (timestamp) => {
   
-  const t = timestamp * 3 / 2000;
-  
-  const radius = Math.abs(Math.cos( t ) * 12);
+  const radius = Math.abs(Math.cos( timestamp * 3 / 2000 ) * 12);
   if(map.getLayer('_flash-point')){
     map.setPaintProperty('_flash-point', 'circle-radius', radius);
+  }
+  
+  const opacity = Math.abs(Math.cos( timestamp * 3 / 1000 ));
+  if(map.getLayer('_click-point')){
+    map.setPaintProperty('_click-point', 'text-opacity', opacity);
   }
   
   // Request the next frame of the animation.
@@ -728,7 +734,7 @@ map.on('load', function() {
     source: '_click-point',
     layout: {
       'text-field': ['format',
-        '▲', { 'font-scale': 1.2 }
+        '▼', { 'font-scale': 1.2 }
       ],
       'text-font':['NotoSansCJKjp-Regular'],
       'text-allow-overlap': true,
@@ -794,13 +800,14 @@ map.on('click', e => {
     ad = Math.floor( ad/100 ) / 10;
     un = "km";
   }
-  document.getElementById("radar-info-target").innerHTML = `target<br>~${ad} ${un}`;
+  document.getElementById("radar-info-target").innerHTML = `${ad} ${un}`;
   
   
   // target direction
   if(g.targetPointLngLat){
     const theta = calcTargetDirection();
     document.getElementById("radar-direction").style.transform = `rotate(${theta}deg)`;
+    document.getElementById("radar-info-target").style.transform = `rotate(${theta}deg)`;
   }
   
   
@@ -858,13 +865,14 @@ map.on('move', ()  => {
       ad = Math.floor( ad/100 ) / 10;
       un = "km";
     }
-    document.getElementById("radar-info-target").innerHTML = `target<br>~${ad} ${un}`;
+    document.getElementById("radar-info-target").innerHTML = `${ad} ${un}`;
   }
   
   // target direction
   if(g.targetPointLngLat){
     const theta = calcTargetDirection();
     document.getElementById("radar-direction").style.transform = `rotate(${theta}deg)`;
+    document.getElementById("radar-info-target").style.transform = `rotate(${theta}deg)`;
   }
   
 });
