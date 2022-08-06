@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>Web地図テンプレ</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://maps.gsi.go.jp/vector/mapbox/1.13.0/mapbox-gl-gsi.js'></script>
+<link href='https://maps.gsi.go.jp/vector/mapbox/1.13.0/mapbox-gl.css' rel='stylesheet' />
+<script src='./measure.js'></script>
+<style>
+body { margin:0; padding:0;}
+
+:root {
+  --main-color: #00ff66;
+  --text-color: #ffffff;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0px;
+  width: 100%;
+}
+
+#menutop{
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  z-index: 99999;
+}
+
+#menu {
+  position: relative;
+  padding: 5px 20px ;
+  margin: 0 0;
+  background: #eeeeee;
+  box-shadow: 0px 0px 0px 0px #eeeeee;
+  font-family: 'Open Sans', sans-serif;
+  min-height: 30px;
+  //max-width: 350px;
+}
+button.local {
+  display: block;
+  text-align:center;
+  background: #dddddd;
+  padding 0 0.5em 0 0.5em;
+  border: solid 2px #ddd;
+  border-radius: 3px;
+  margin: 2.5px 0px 2.5px 0px;
+  line-height: 1.5em;
+  font-size: 1em;
+  width: 100%;
+}
+button.small {
+  text-align:center;
+  background: #dddddd;
+  padding 0 0.5em 0 0.5em;
+  border: solid 2px #aaa;
+  border-radius: 3px;
+  margin: 2.5px 0px 2.5px 0px;
+  line-height: 1.5em;
+  font-size: 1em;
+}
+
+#slider_01 {
+  //width: 80%;
+}
+
+#slider_02 {
+  //width: 80%;
+}
+
+#note {
+  position: relative;
+  color: #FF0000;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  right: 0.5em;
+  text-align: right;
+  text-shadow: #FFFFFF 0.2em 0.2em 0.2em, #FFFFFF -0.2em 0.2em 0.2em, #FFFFFF 0.2em -0.2em 0.2em, #FFFFFF -0.2em -0.2em 0.2em;
+}
+
+
+#overlay-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #EEEEEE;
+  z-index: 1000000;
+  padding: 5px 20px;
+}
+
+table.popup-table {
+  //border-collapse: collapse;
+  border-top: solid 1px;
+  border-bottom: solid 1px;
+  margin-top: 5px;
+  width: 100%;
+}
+
+
+#radar-overlay {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(0,0,0,0) 25vmin, rgba(0,0,0,0.8) 40vmin, rgba(0,0,0,0.8) 50vmin, rgba(0,0,0,1));
+  pointer-events:none;
+}
+
+#radar-case {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 80vmin;
+  height: 80vmin;
+  border: 2px solid var(--main-color);
+  border-radius: 50%;
+}
+
+#radar-scan {
+  position: absolute;
+  right: 50%;
+  top: 0%;
+  width: 2px;
+  height: 40vmin;
+  background-color: var(--main-color);
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-name: rotatation;
+  transform-origin: 100% 100%;
+}
+
+
+#radar-shadow {
+  position: absolute;
+  right: 50%;
+  top: 0%;
+  width: 20vmin;
+  height: 40vmin;
+  border-right: 2px solid  var(--main-color);
+  border-top-left-radius: 20vmin 10vmin;
+  background-color: #FFFFFF;
+
+  background: linear-gradient(65deg, rgba(0, 255, 100, 0), rgba(0, 255, 100, 0), rgba(0, 255, 100, 0.8));
+
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-name: rotatation;
+  transform-origin: 100% 100%;
+
+}
+
+@keyframes rotatation {
+  0%{ transform:rotate(0);}
+  100%{ transform:rotate(360deg); }
+}
+
+
+#radar-case2 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 78vmin;
+  height: 78vmin;
+  border: 2px dotted var(--main-color);
+  border-radius: 50%;
+}
+
+#radar-case3 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 20vmin;
+  height: 20vmin;
+  border: 1px solid var(--main-color);
+  border-radius: 50%;
+}
+
+#radar-case4 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 40vmin;
+  height: 40vmin;
+  border: 1px solid var(--main-color);
+  border-radius: 50%;
+}
+
+#radar-case5 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 60vmin;
+  height: 60vmin;
+  border: 1px solid var(--main-color);
+  border-radius: 50%;
+}
+
+#radar-case6 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 80vmin;
+  height: 80vmin;
+  border: 4px dashed var(--main-color);
+  border-radius: 50%;
+}
+
+
+#radar-line1 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 80vmin;
+  height: 0px;
+  border-top: 1px solid var(--main-color);
+}
+
+#radar-line2 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 0px;
+  height: 80vmin;
+  border-left: 1px solid var(--main-color);
+}
+
+
+#radar-box {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 2vmin;
+  height: 2vmin;
+  border: 1px solid #ff0000;
+}
+
+
+#radar-info-elev {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  margin-left: 2vmin;
+  width: 40vmin;
+  height: 2em;
+  font-size: 0.5em;
+  color: var(--text-color);
+}
+
+#radar-info-lnglat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: 2vmin;
+  width: 40vmin;
+  height: 2em;
+  font-size: 0.5em;
+  color: var(--text-color);
+}
+
+
+#radar-info-addr {
+  position: absolute;
+  top: calc( 50vh + 40vmin + 0.5em );
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80vmin;
+  height: 2em;
+  text-align: center;
+  color: var(--text-color);
+}
+
+
+#radar-info-rot {
+  position: absolute;
+  bottom: calc( 50vh + 40vmin );
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80vmin;
+  height: 2em;
+  text-align: center;
+  color: var(--text-color);
+}
+
+
+#radar-info-zl {
+  position: absolute;
+  bottom: calc( 50vh - 40vmin);
+  right: calc( 50vw - 40vmin);
+  width: 40vmin;
+  font-size: 0.5em;
+  text-align: right;
+  color: var(--text-color);
+}
+
+
+#radar-info-target {
+  position: absolute;
+  top: calc( 50vh - 40vmin);
+  right: calc( 50vw - 40vmin);
+  width: 40vmin;
+  font-size: 0.5em;
+  text-align: right;
+  color: var(--text-color);
+}
+
+
+#radar-info-target2 {
+  position: absolute;
+  top: calc( 50vh - 40vmin);
+  left: calc( 50vw - 40vmin);
+  width: 40vmin;
+  font-size: 0.5em;
+  color: var(--text-color);
+}
+
+#radar-direction {
+  position: absolute;
+  left: 50vw;
+  top: calc( 50vh - 45vmin);
+  width: 0;
+  height: 3vmin;
+  border-left: 2px solid var(--main-color);
+
+  transform-origin: 0% 45vmin;
+  
+  transform: rotate(90deg);
+  
+  /*
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-name: rotatation;
+  */
+  
+}
+
+</style>
+<body>
+
+<div id='map'></div>
+
+<div id='radar-overlay'>
+  <div id='radar-case'>
+    <div id='radar-scan'></div>
+    <div id='radar-shadow'></div>
+  </div>
+  <div id='radar-case2'></div>
+  <div id='radar-case3'></div>
+  <div id='radar-case4'></div>
+  <div id='radar-case5'></div>
+  <div id='radar-case6'></div>
+  <div id='radar-line1'></div>
+  <div id='radar-line2'></div>
+  <div id='radar-box'></div>
+  <div id='radar-direction'></div>
+  <div id='radar-info-rot'>---</div>
+  <div id='radar-info-elev'>---</div>
+  <div id='radar-info-lnglat'>---/---</div>
+  <div id='radar-info-addr'>---</div>
+  <div id='radar-info-zl'>---</div>
+  <div id='radar-info-target'>---</div>
+  <div id='radar-info-target2'>---</div>
+</div>
+  
+<script>
+
+const g = {
+  'targetPointLngLat': null
+}
+
+
+/*************************************************/
+/*Mapbox 関係設定                                */
+/*************************************************/
+const map = new mapboxgl.Map({
+  container: 'map', // container id
+  hash: true, //add #position on URL
+  style: './style.json', // stylesheet location
+  center: [139.78148, 35.768793], // starting position [lng, lat]
+  zoom: 9, // starting zoom
+  minZoom: 6,
+  maxZoom: 17.99,
+  maxPitch: 0,
+  attributionControl: false,
+  //clickTolerance: 10,
+  localIdeographFontFamily: ['MS Gothic', 'Hiragino Kaku Gothic Pro', 'sans-serif']
+});
+
+
+map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+map.addControl(new mapboxgl.ScaleControl() );
+map.addControl(new mapboxgl.AttributionControl({compact: true}), 'top-right');
+
+map.showTileBoundaries = false;
+
+
+//Reference: Slippy map tilenames
+//https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+const lon2tile = (lon,zoom) => { return (Math.floor((lon+180)/360*Math.pow(2,zoom))); }
+
+const lat2tile = (lat,zoom) => { return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom))); }
+
+const lon2tiled = (lon,zoom) => { return ((lon+180)/360*Math.pow(2,zoom)); }
+
+const lat2tiled = (lat,zoom) => { return ((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom)); }
+
+
+map.on('move', () => {
+  //moveendのほうがスマートそうだが、動かしている間に目まぐるしく数字が変わる感じを出したいので、moveを使う。
+
+  const cn = map.getCenter();
+  const sk = 10000;
+  const str = `${Math.floor(cn.lat*sk)/sk}/${Math.floor(cn.lng*sk)/sk}`;
+  document.getElementById("radar-info-lnglat").innerText = str;
+  
+  
+});
+
+const timer = () => {
+  
+  const zl = map.getZoom();
+  
+  const date = new Date();
+  const day = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}` 
+  const tim = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+  
+  document.getElementById("radar-info-zl").innerHTML = `z ${Math.floor(zl*100)/100}<br>${day}<br>${tim}`;
+  
+  const ber = map.getBearing();
+  document.getElementById("radar-info-rot").innerHTML = `${Math.floor(ber*100)/100}°`;
+}
+
+setInterval(timer, 1000);
+
+
+
+//Reference: GSI Vector
+//GSIBV.Map.Util.AddrLoader https://maps.gsi.go.jp/vector/js/src/map/util.js
+const isPointInPolygon = (point, polygon) => {
+  let wn = 0;
+
+  for (let i = 0; i < polygon.length - 1; i++) {
+    if ((polygon[i][1] <= point[1]) && (polygon[i + 1][1] > point[1])) {
+      const vt = (point[1] - polygon[i][1]) / (polygon[i + 1][1] - polygon[i][1]);
+      if (point[0] < (polygon[i][0] + (vt * (polygon[i + 1][0] - polygon[i][0])))) {
+
+        ++wn;
+
+      }
+    }
+    else if ((polygon[i][1] > point[1]) && (polygon[i + 1][1] <= point[1])) {
+      const vt = (point[1] - polygon[i][1]) / (polygon[i + 1][1] - polygon[i][1]);
+      if (point[0] < (polygon[i][0] + (vt * (polygon[i + 1][0] - polygon[i][0])))) {
+
+        --wn;
+
+      }
+    }
+  }
+  return (wn != 0);
+  
+}
+
+const getGeoJsonPolygonInfo = ( url, pos ) => {
+  
+  return fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    
+    let hitFeature = null;
+    if (data && data.features) {
+      const targetPos = [pos.lng, pos.lat];
+      for (let i = 0; i < data.features.length; i++) {
+        const feature = data.features[i];
+        if (!feature.geometry || !feature.geometry.coordinates) continue;
+
+        let coords = feature.geometry.coordinates;
+        if (feature.geometry.type != "MultiPolygon") {
+          coords = [coords];
+        }
+        
+        for (let j = 0; j < coords.length; j++) {
+          let ret = null;
+          ret = isPointInPolygon(targetPos, coords[j][0]);
+          if (ret) {
+            for (let k = 1; k < coords[j].length; k++) {
+              // くりぬきポリゴン内なら×
+              const ret2 = isPointInPolygon(targetPos, coords[j][k]);
+              if (ret2) {
+                ret = false;
+                break;
+              }
+            }
+            if (ret) {
+              hitFeature = feature;
+              break;
+            }
+          }
+        }
+        if (hitFeature) break;
+      }
+    }
+    
+    return hitFeature;
+    
+  })
+
+}
+
+const getElevation = (tilePos) => {
+
+  document.getElementById( "radar-info-elev" ).innerText = `---`;
+
+  const pow2_8 = Math.pow(2, 8);
+  const pow2_16 = Math.pow(2, 16);
+  const pow2_23 = Math.pow(2, 23);
+  const pow2_24 = Math.pow(2, 24);
+
+  const y = Math.floor(tilePos.y);
+  const pY = Math.floor((tilePos.y - y) * 256);
+  
+  const x = Math.floor(tilePos.x);
+  const pX = Math.floor((tilePos.x - x) * 256);
+  
+  const img = new Image(); 
+  img.crossOrigin = "Anonymous";
+  img.src = `https://cyberjapandata.gsi.go.jp/xyz/dem_png/14/${x}/${y}.png`;
+  
+  
+  img.onload = () => {
+  
+    const _canvas = document.createElement("canvas");
+    _canvas.width = 256;
+    _canvas.height = 256;
+    
+    const ctx = _canvas.getContext("2d");
+
+    ctx.drawImage(img, 0, 0);
+
+    const imgData = ctx.getImageData(0, 0, 256, 256);
+    const idx = (pY * 256 * 4) + (pX * 4);
+    const r = imgData.data[idx + 0];
+    const g = imgData.data[idx + 1];
+    const b = imgData.data[idx + 2];
+    let h = 0;
+
+    if (r != 128 || g != 0 || b != 0) {
+      
+      const d = r * pow2_16 + g * pow2_8 + b;
+      h = (d < pow2_23) ? d : d - pow2_24;
+      if (h == -pow2_23) h = 0;
+      else h *= 0.01;
+      h = Math.floor(h * 100)/100;
+      
+    }
+    else {
+      h = "---";
+    }
+    
+    document.getElementById( "radar-info-elev" ).innerText = `${h} m`;
+  
+  }
+  
+}
+
+
+map.on('moveend', () => {
+
+  const cn = map.getCenter();
+  
+  const x = lon2tile(cn.lng, 14);
+  const y = lat2tile(cn.lat, 14);
+  
+  const url = `https://cyberjapandata.gsi.go.jp/xyz/lv01_plg/14/${x}/${y}.geojson`;
+  
+  getGeoJsonPolygonInfo(url, cn)
+  .then( hitFeature => {
+    if(!hitFeature){
+      document.getElementById( "radar-info-addr" ).innerText = "---";
+    }else{
+      const p = hitFeature.properties;
+      document.getElementById( "radar-info-addr" ).innerHTML = `${p.pref}${p.muni}${p.LV01}`;
+    }  
+  })
+  .catch( e => {
+    console.log(e);
+    document.getElementById( "radar-info-addr" ).innerText = "---";
+  });
+  
+  const xd = lon2tiled(cn.lng, 14);
+  const yd = lat2tiled(cn.lat, 14);
+  
+  getElevation({"x": xd, "y": yd});
+  
+});
+
+
+
+
+
+//https://docs.mapbox.com/jp/mapbox-gl-js/example/animate-marker/
+// Define the animation.
+const animateMarker = (timestamp) => {
+  
+  const t = timestamp * 3 / 2000;
+  
+  const radius = Math.abs(Math.cos( t ) * 12);
+  if(map.getLayer('_flash-point')){
+    map.setPaintProperty('_flash-point', 'circle-radius', radius);
+  }
+  
+  // Request the next frame of the animation.
+  requestAnimationFrame(animateMarker);
+  
+}
+
+map.on('load', function() {
+  map.addSource('_click-point', {
+    type: 'geojson',
+    data: {
+      type: 'FeatureCollection',
+      features: []
+    }
+  });
+  
+  /*
+  map.addLayer({
+    id: '_flash-point',
+    type: 'circle',
+    source: '_click-point',
+    layout: {},
+    paint: {
+      'circle-opacity': 0.8,
+      'circle-color': '#00ff66',
+      'circle-radius': 2,
+      'circle-blur': 0.5
+    }
+  });
+  */
+  
+  map.addLayer({
+    id: '_flash-point',
+    type: 'circle',
+    'source':'gsibv-vectortile-source-1-4-16',
+    'source-layer':'symbol',
+    'filter':['in', ['get', 'ftCode'], ['literal', [7101, 7102, 7103]]],
+    layout: {},
+    paint: {
+      'circle-opacity': 0.8,
+      'circle-color': '#00ff66',
+      'circle-radius': 2,
+      'circle-blur': 0.5
+    }
+  });
+  
+  //基準点用
+  map.addLayer({
+    id: '_gcp-point',
+    type: 'circle',
+    'source':'gsibv-vectortile-source-1-4-16',
+    'source-layer':'symbol',
+    'filter':['in', ['get', 'ftCode'], ['literal', [7101, 7102, 7103]]],
+    layout: {},
+    paint: {
+      'circle-opacity': 1,
+      'circle-color': '#00ff66',
+      'circle-radius': 2
+    }
+  });
+  
+  //クリック地点用
+  /*
+  map.addLayer({
+    id: '_click-point',
+    type: 'circle',
+    source: '_click-point',
+    layout: {},
+    paint: {
+      'circle-opacity': 1,
+      'circle-color': '#00ff66',
+      'circle-radius': 8,
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#000000'
+      
+    }
+  });
+  
+  */
+  map.addLayer({
+    id: '_click-point',
+    type: 'symbol',
+    source: '_click-point',
+    layout: {
+      'text-field': ['format',
+        '▲', { 'font-scale': 1.2 }
+      ],
+      'text-font':['NotoSansCJKjp-Regular'],
+      'text-allow-overlap': true,
+      'text-ignore-placement': true
+    },
+    paint: {
+      'text-color': '#00ff66',
+      'text-halo-color': '#000000',
+      'text-halo-width': 1
+    }
+  });
+  
+  requestAnimationFrame(animateMarker);
+  
+});
+
+
+const calcTargetDirection = () => {
+  const p1 = map.project(map.getCenter());
+  const p2 = map.project(g.targetPointLngLat);
+  
+  console.log(p1);
+  console.log(p2);
+  
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  
+  const theta = 90 + Math.atan2(dy, dx) * 180 / Math.PI;
+  
+  return theta;
+  
+}
+
+
+map.on('click', e => {
+  
+  map.getSource('_click-point').setData({
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [ e.lngLat.lng, e.lngLat.lat ]
+        }
+      }
+    ]
+  });
+  
+  
+  g.targetPointLngLat = new mapboxgl.LngLat(e.lngLat.lng, e.lngLat.lat);
+  
+  const cn = map.getCenter();
+  const cnll = new mapboxgl.LngLat(cn.lng, cn.lat);
+  //let ad = Math.floor(cnll.distanceTo(g.targetPointLngLat));
+  let ad = Math.floor( GSI.Utils.DistanceCalculator.calc(cn, g.targetPointLngLat) );
+  let un = "m";
+    
+  if(ad > 10000){
+    ad = Math.floor( ad/1000 );
+    un = "km";
+  }else if(ad > 1000){
+    ad = Math.floor( ad/100 ) / 10;
+    un = "km";
+  }
+  document.getElementById("radar-info-target").innerHTML = `target<br>~${ad} ${un}`;
+  
+  
+  // target direction
+  if(g.targetPointLngLat){
+    const theta = calcTargetDirection();
+    document.getElementById("radar-direction").style.transform = `rotate(${theta}deg)`;
+  }
+  
+  
+  //レンダリングされた地物を取得
+  const features = map.queryRenderedFeatures(e.point);
+  
+  if (!features.length) {
+    document.getElementById("radar-info-target2").innerHTML = `---`;
+    return; 
+  };
+  
+  let htmlString = "---";
+  
+  //console.log(features);
+  
+  for( i in features ){
+    
+    if(features[i].layer.id.match(/^_click/)){
+      continue;
+    }
+    
+    const prop = features[i].properties;
+    
+    let featureProperties = "";
+    for(name in prop){
+      featureProperties += "<tr><td>" + name + "</td>"
+                        +  "<td>" + prop[name] + "</td></tr>";
+    }
+    
+    htmlString = "<table>" + featureProperties + "</table>";
+    
+    break;
+    
+  }
+  
+  document.getElementById("radar-info-target2").innerHTML = `${htmlString}`;
+  
+  
+});
+
+map.on('move', ()  => {
+  
+  // target distance info
+  if(g.targetPointLngLat){
+    const cn = map.getCenter();
+    const cnll = new mapboxgl.LngLat(cn.lng, cn.lat);
+    //let ad0 = Math.floor(cnll.distanceTo(g.targetPointLngLat));
+    let ad = Math.floor( GSI.Utils.DistanceCalculator.calc(cn, g.targetPointLngLat) );
+    let un = "m";
+    
+    if(ad > 10000){
+      ad = Math.floor( ad/1000 );
+      un = "km";
+    }else if(ad > 1000){
+      ad = Math.floor( ad/100 ) / 10;
+      un = "km";
+    }
+    document.getElementById("radar-info-target").innerHTML = `target<br>~${ad} ${un}`;
+  }
+  
+  // target direction
+  if(g.targetPointLngLat){
+    const theta = calcTargetDirection();
+    document.getElementById("radar-direction").style.transform = `rotate(${theta}deg)`;
+  }
+  
+});
+
+
+
+/*
+
+const makePopupHtml = (prop) => {
+  
+  let htmlString = ""; //ポップアップ
+  let featureProperties = "";
+  for(name in prop){
+    featureProperties = featureProperties + "<tr><td style='vertical-align:top; color:#555555;'>" + name + "</td>"
+                      + "<td style='color:#000000;'>" + prop[name] + "</td></tr>";
+  }
+  htmlString = htmlString + "<table class='popup-table'>" + featureProperties + "</table>";
+  
+  return htmlString;
+  
+}
+
+const popup = new mapboxgl.Popup();
+map.on('click', function(e) {
+  
+  //初期化
+  popup.remove();
+  
+  //レンダリングされた地物を取得
+  const features = map.queryRenderedFeatures(e.point);
+  
+  if (!features.length) {
+    popup.remove();
+    return;
+  }
+  
+  //ポップアップ表示処理
+  let htmlString = "";
+  features.forEach( feature => {
+    htmlString = htmlString + makePopupHtml(feature.properties);
+    console.log(feature.properties);
+  });
+  
+  if (!htmlString || htmlString == "") {
+    popup.remove();
+    return;
+  }
+  
+  popup.setLngLat([ e.lngLat.lng, e.lngLat.lat ])
+    .setHTML(htmlString)
+    .addTo(map);
+});
+
+*/
+
+</script>
+
+</body>
+</html>
