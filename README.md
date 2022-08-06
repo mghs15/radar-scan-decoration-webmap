@@ -9,7 +9,7 @@ https://mghs15.github.io/radar-scan-decoration-webmap/
 * データの一部に[地理院タイル](https://maps.gsi.go.jp/development/ichiran.html)を利用しています。
 * 表示している数値は雰囲気づくりのためで、一部、利用にそぐわないデータもありますので要注意。
 
-![デモサイトイメージ](image.png "デモサイトイメージ")
+[![デモサイトイメージ](image.png "デモサイトイメージ")](http://localhost:8000/radar/docs/#14.06/35.39332/135.96009/-130.4)
 
 ## 参考文献
 * https://developer.mozilla.org/ja/
