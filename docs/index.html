@@ -19,8 +19,8 @@ body { margin:0; padding:0;}
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
 table.popup-table {
@@ -33,9 +33,11 @@ table.popup-table {
 
 
 #radar-overlay {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: radial-gradient(circle, rgba(0,0,0,0) 25vmin, rgba(0,0,0,0.8) 40vmin, rgba(0,0,0,0.8) 50vmin, rgba(0,0,0,1));
   pointer-events:none;
 }
@@ -200,8 +202,8 @@ table.popup-table {
 
 #radar-info-elev {
   position: absolute;
-  bottom: 50vh;
-  left: 50vw;
+  bottom: 50%;
+  left: 50%;
   margin-left: 2vmin;
   width: 40vmin;
   height: 2em;
@@ -211,8 +213,8 @@ table.popup-table {
 
 #radar-info-lnglat {
   position: absolute;
-  top: 50vh;
-  left: 50vw;
+  top: 50%;
+  left: 50%;
   margin-left: 2vmin;
   width: 40vmin;
   height: 2em;
@@ -223,7 +225,7 @@ table.popup-table {
 
 #radar-info-addr {
   position: absolute;
-  top: calc( 50vh + 40vmin + 0.5em );
+  top: calc( 50% + 40vmin + 0.5em );
   left: 0;
   right: 0;
   margin-left: auto;
@@ -237,7 +239,7 @@ table.popup-table {
 
 #radar-info-rot {
   position: absolute;
-  bottom: calc( 50vh + 40vmin );
+  bottom: calc( 50% + 40vmin );
   left: 0;
   right: 0;
   margin-left: auto;
@@ -251,8 +253,8 @@ table.popup-table {
 
 #radar-info-zl {
   position: absolute;
-  bottom: calc( 50vh - 40vmin);
-  right: calc( 50vw - 40vmin);
+  bottom: calc( 50% - 40vmin);
+  right: calc( 50% - 40vmin);
   width: 40vmin;
   font-size: 0.5em;
   text-align: right;
@@ -262,8 +264,8 @@ table.popup-table {
 
 #radar-info-target {
   position: absolute;
-  left: calc( 50vw - 10vmin);
-  top: calc( 50vh - 39vmin);
+  left: calc( 50% - 10vmin);
+  top: calc( 50% - 39vmin);
   width: 20vmin;
   height: 3vmin;
   font-size: 0.5em;
@@ -276,8 +278,8 @@ table.popup-table {
 
 #radar-info-target2 {
   position: absolute;
-  top: calc( 50vh - 40vmin);
-  left: calc( 50vw - 40vmin);
+  top: calc( 50% - 40vmin);
+  left: calc( 50% - 40vmin);
   width: 40vmin;
   font-size: 0.5em;
   color: var(--text-color);
@@ -285,8 +287,8 @@ table.popup-table {
 
 #radar-direction {
   position: absolute;
-  left: 50vw;
-  top: calc( 50vh - 45vmin);
+  left: 50%;
+  top: calc( 50% - 45vmin);
   width: 0;
   height: 3vmin;
   border-left: 2px solid var(--main-color);
@@ -307,8 +309,8 @@ table.popup-table {
 
 #radar-info-debug {
   position: absolute;
-  top: calc( 50vh - 40vmin);
-  right: calc( 50vw - 40vmin);
+  top: calc( 50% - 40vmin);
+  right: calc( 50% - 40vmin);
   width: 40vmin;
   font-size: 0.5em;
   text-align: right;
@@ -704,10 +706,12 @@ const calcTargetDirection = () => {
   
   const theta = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
   
+  /*
   document.getElementById("radar-info-debug").innerHTML = `diff ${Math.floor(dx)}/${Math.floor(dy)}<br>`
                                                         + `_p1c ${Math.floor(p1.x)}/${Math.floor(p1.y)}<br>`
                                                         + `_p2t ${Math.floor(p2.x)}/${Math.floor(p2.y)}<br>`
                                                         + `_theta ${Math.floor(theta)}deg<br>`;
+  */
   
   return theta;
   
