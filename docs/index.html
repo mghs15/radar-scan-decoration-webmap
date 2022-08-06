@@ -646,9 +646,9 @@ const animateMarker = (timestamp) => {
     map.setPaintProperty('_flash-point', 'circle-radius', radius);
   }
   
-  const opacity = Math.abs(Math.cos( timestamp * 3 / 1000 ));
+  const width = Math.abs(Math.cos( timestamp * 3 / 1000 ) * 2);
   if(map.getLayer('_click-point')){
-    map.setPaintProperty('_click-point', 'text-opacity', opacity);
+    map.setPaintProperty('_click-point', 'circle-stroke-width', width);
   }
   
   // Request the next frame of the animation.
@@ -711,7 +711,7 @@ map.on('load', function() {
   });
   
   //クリック地点用
-  /*
+  
   map.addLayer({
     id: '_click-point',
     type: 'circle',
@@ -719,15 +719,14 @@ map.on('load', function() {
     layout: {},
     paint: {
       'circle-opacity': 1,
-      'circle-color': '#00ff66',
-      'circle-radius': 8,
-      'circle-stroke-width': 1,
-      'circle-stroke-color': '#000000'
+      'circle-color': 'rgba(0,0,0,0)',
+      'circle-radius': 6,
+      'circle-stroke-width': 2,
+      'circle-stroke-color': '#00ff66',
       
     }
   });
-  
-  */
+  /*
   map.addLayer({
     id: '_click-point',
     type: 'symbol',
@@ -746,6 +745,7 @@ map.on('load', function() {
       'text-halo-width': 1
     }
   });
+  */
   
   requestAnimationFrame(animateMarker);
   
@@ -756,13 +756,10 @@ const calcTargetDirection = () => {
   const p1 = map.project(map.getCenter());
   const p2 = map.project(g.targetPointLngLat);
   
-  console.log(p1);
-  console.log(p2);
-  
   const dx = p2.x - p1.x;
-  const dy = p2.y - p1.y;
+  const dy = p1.y - p2.y;
   
-  const theta = 90 + Math.atan2(dy, dx) * 180 / Math.PI;
+  const theta = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
   
   return theta;
   
