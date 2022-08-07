@@ -436,7 +436,7 @@ map.on('move', () => {
 const timer = () => {
   
   const date = new Date();
-  const day = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}` 
+  const day = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}` ;
   const tim = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
   
   document.getElementById("radar-info-time").innerHTML = `${day}<br>${tim}`;
