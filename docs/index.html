@@ -297,16 +297,30 @@ table.popup-table {
   
 }
 
+.radar-hatch-title {
+  position: absolute;
+  left: calc( 50% - 10vmin );
+  top: calc( 50% - 40vmin - 2em );
+  width: 20vmin;
+  height: 1em;
+  font-size: 0.6em;
+  text-align: center;
+  color: var(--main-color);
+  transform-origin: 50% calc( 40vmin + 2em );
+  transform: rotate(90deg);
+}
 
 #radar-info-debug {
   position: absolute;
   top: calc( 50% - 40vmin );
   right: calc( 50% - 40vmin );
   width: 40vmin;
-  font-size: 0.8em;
+  font-size: 0.5em;
   text-align: right;
   color: var(--text-color);
 }
+
+
 
 </style>
 <body>
@@ -314,6 +328,30 @@ table.popup-table {
 <div id='map'></div>
 
 <div id='radar-overlay'>
+  <div class='radar-hatch-title' style='transform:rotate(0deg);'>0</div>
+  <div class='radar-hatch-title' style='transform:rotate(15deg);'>15</div>
+  <div class='radar-hatch-title' style='transform:rotate(30deg);'>30</div>
+  <div class='radar-hatch-title' style='transform:rotate(45deg);'>45</div>
+  <div class='radar-hatch-title' style='transform:rotate(60deg);'>60</div>
+  <div class='radar-hatch-title' style='transform:rotate(75deg);'>75</div>
+  <div class='radar-hatch-title' style='transform:rotate(90deg);'>90</div>
+  <div class='radar-hatch-title' style='transform:rotate(105deg);'>105</div>
+  <div class='radar-hatch-title' style='transform:rotate(120deg);'>120</div>
+  <div class='radar-hatch-title' style='transform:rotate(135deg);'>135</div>
+  <div class='radar-hatch-title' style='transform:rotate(150deg);'>150</div>
+  <div class='radar-hatch-title' style='transform:rotate(165deg);'>165</div>
+  <div class='radar-hatch-title' style='transform:rotate(180deg);'>180</div>
+  <div class='radar-hatch-title' style='transform:rotate(195deg);'>195</div>
+  <div class='radar-hatch-title' style='transform:rotate(210deg);'>210</div>
+  <div class='radar-hatch-title' style='transform:rotate(225deg);'>225</div>
+  <div class='radar-hatch-title' style='transform:rotate(240deg);'>240</div>
+  <div class='radar-hatch-title' style='transform:rotate(255deg);'>255</div>
+  <div class='radar-hatch-title' style='transform:rotate(270deg);'>270</div>
+  <div class='radar-hatch-title' style='transform:rotate(285deg);'>285</div>
+  <div class='radar-hatch-title' style='transform:rotate(300deg);'>300</div>
+  <div class='radar-hatch-title' style='transform:rotate(315deg);'>315</div>
+  <div class='radar-hatch-title' style='transform:rotate(330deg);'>330</div>
+  <div class='radar-hatch-title' style='transform:rotate(345deg);'>345</div>
   <div id='radar-case'>
     <div id='radar-scan'></div>
     <div id='radar-shadow'></div>
@@ -388,12 +426,14 @@ map.on('move', () => {
   const str = `${Math.floor(cn.lat*sk)/sk}/${Math.floor(cn.lng*sk)/sk}`;
   document.getElementById("radar-info-lnglat").innerText = str;
   
+  const zl = map.getZoom();
+  const ber = map.getBearing();
+  document.getElementById("radar-info-rot").innerHTML = `z ${Math.floor(zl*100)/100}<br>${Math.floor(ber*100)/100}°`;
   
 });
 
+
 const timer = () => {
-  
-  
   
   const date = new Date();
   const day = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}` 
@@ -401,9 +441,6 @@ const timer = () => {
   
   document.getElementById("radar-info-time").innerHTML = `${day}<br>${tim}`;
   
-  const zl = map.getZoom();
-  const ber = map.getBearing();
-  document.getElementById("radar-info-rot").innerHTML = `z ${Math.floor(zl*100)/100}<br>${Math.floor(ber*100)/100}°`;
 }
 
 setInterval(timer, 1000);
