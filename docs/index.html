@@ -297,6 +297,17 @@ table.popup-table {
   
 }
 
+
+#radar-north {
+  position: absolute;
+  top: calc( 50% - 40vmin );
+  left: 50%;
+  width: 0px;
+  height: 40vmin;
+  border-left: 1px dashed var(--main-color);
+  transform-origin: 0% 40vmin;
+}
+
 .radar-hatch-title {
   position: absolute;
   left: calc( 50% - 10vmin );
@@ -328,30 +339,32 @@ table.popup-table {
 <div id='map'></div>
 
 <div id='radar-overlay'>
-  <div class='radar-hatch-title' style='transform:rotate(0deg);'>0</div>
-  <div class='radar-hatch-title' style='transform:rotate(15deg);'>15</div>
-  <div class='radar-hatch-title' style='transform:rotate(30deg);'>30</div>
-  <div class='radar-hatch-title' style='transform:rotate(45deg);'>45</div>
-  <div class='radar-hatch-title' style='transform:rotate(60deg);'>60</div>
-  <div class='radar-hatch-title' style='transform:rotate(75deg);'>75</div>
-  <div class='radar-hatch-title' style='transform:rotate(90deg);'>90</div>
-  <div class='radar-hatch-title' style='transform:rotate(105deg);'>105</div>
-  <div class='radar-hatch-title' style='transform:rotate(120deg);'>120</div>
-  <div class='radar-hatch-title' style='transform:rotate(135deg);'>135</div>
-  <div class='radar-hatch-title' style='transform:rotate(150deg);'>150</div>
-  <div class='radar-hatch-title' style='transform:rotate(165deg);'>165</div>
-  <div class='radar-hatch-title' style='transform:rotate(180deg);'>180</div>
-  <div class='radar-hatch-title' style='transform:rotate(195deg);'>195</div>
-  <div class='radar-hatch-title' style='transform:rotate(210deg);'>210</div>
-  <div class='radar-hatch-title' style='transform:rotate(225deg);'>225</div>
-  <div class='radar-hatch-title' style='transform:rotate(240deg);'>240</div>
-  <div class='radar-hatch-title' style='transform:rotate(255deg);'>255</div>
-  <div class='radar-hatch-title' style='transform:rotate(270deg);'>270</div>
-  <div class='radar-hatch-title' style='transform:rotate(285deg);'>285</div>
-  <div class='radar-hatch-title' style='transform:rotate(300deg);'>300</div>
-  <div class='radar-hatch-title' style='transform:rotate(315deg);'>315</div>
-  <div class='radar-hatch-title' style='transform:rotate(330deg);'>330</div>
-  <div class='radar-hatch-title' style='transform:rotate(345deg);'>345</div>
+  <div id='radar-graduations'>
+    <div class='radar-hatch-title' style='transform:rotate(0deg);'>0</div>
+    <div class='radar-hatch-title' style='transform:rotate(15deg);'>15</div>
+    <div class='radar-hatch-title' style='transform:rotate(30deg);'>30</div>
+    <div class='radar-hatch-title' style='transform:rotate(45deg);'>45</div>
+    <div class='radar-hatch-title' style='transform:rotate(60deg);'>60</div>
+    <div class='radar-hatch-title' style='transform:rotate(75deg);'>75</div>
+    <div class='radar-hatch-title' style='transform:rotate(90deg);'>90</div>
+    <div class='radar-hatch-title' style='transform:rotate(105deg);'>105</div>
+    <div class='radar-hatch-title' style='transform:rotate(120deg);'>120</div>
+    <div class='radar-hatch-title' style='transform:rotate(135deg);'>135</div>
+    <div class='radar-hatch-title' style='transform:rotate(150deg);'>150</div>
+    <div class='radar-hatch-title' style='transform:rotate(165deg);'>165</div>
+    <div class='radar-hatch-title' style='transform:rotate(180deg);'>180</div>
+    <div class='radar-hatch-title' style='transform:rotate(195deg);'>195</div>
+    <div class='radar-hatch-title' style='transform:rotate(210deg);'>210</div>
+    <div class='radar-hatch-title' style='transform:rotate(225deg);'>225</div>
+    <div class='radar-hatch-title' style='transform:rotate(240deg);'>240</div>
+    <div class='radar-hatch-title' style='transform:rotate(255deg);'>255</div>
+    <div class='radar-hatch-title' style='transform:rotate(270deg);'>270</div>
+    <div class='radar-hatch-title' style='transform:rotate(285deg);'>285</div>
+    <div class='radar-hatch-title' style='transform:rotate(300deg);'>300</div>
+    <div class='radar-hatch-title' style='transform:rotate(315deg);'>315</div>
+    <div class='radar-hatch-title' style='transform:rotate(330deg);'>330</div>
+    <div class='radar-hatch-title' style='transform:rotate(345deg);'>345</div>
+  </div>
   <div id='radar-case'>
     <div id='radar-scan'></div>
     <div id='radar-shadow'></div>
@@ -364,6 +377,7 @@ table.popup-table {
   <div id='radar-line1'></div>
   <div id='radar-line2'></div>
   <div id='radar-box'></div>
+  <div id='radar-north'></div>
   <div id='radar-direction'></div>
   <div id='radar-info-rot'>---</div>
   <div id='radar-info-elev'>---</div>
@@ -426,9 +440,14 @@ map.on('move', () => {
   const str = `${Math.floor(cn.lat*sk)/sk}/${Math.floor(cn.lng*sk)/sk}`;
   document.getElementById("radar-info-lnglat").innerText = str;
   
+});
+
+map.on('rotate', () => {
   const zl = map.getZoom();
   const ber = map.getBearing();
   document.getElementById("radar-info-rot").innerHTML = `z ${Math.floor(zl*100)/100}<br>${Math.floor(ber*100)/100}°`;
+  
+  document.getElementById("radar-north").style.transform = `rotate(${-ber}deg)`;
   
 });
 
@@ -449,6 +468,8 @@ setInterval(timer, 1000);
 
 //Reference: GSI Vector
 //GSIBV.Map.Util.AddrLoader https://maps.gsi.go.jp/vector/js/src/map/util.js
+//たぶんWinding Number Algorithm
+//参考：https://www.nttpc.co.jp/technology/number_algorithm.html
 const isPointInPolygon = (point, polygon) => {
   let wn = 0;
 
