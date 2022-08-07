@@ -157,7 +157,7 @@ table.popup-table {
   margin: auto;
   width: 80vmin;
   height: 80vmin;
-  border: 4px dashed var(--main-color);
+  border: 4px dotted var(--main-color);
   border-radius: 50%;
 }
 
@@ -279,12 +279,12 @@ table.popup-table {
 #radar-direction {
   position: absolute;
   left: 50%;
-  top: calc( 50% - 45vmin);
+  top: calc( 50% - 40vmin - 2em );
   width: 0;
-  height: 3vmin;
+  height: 1em;
   border-left: 2px solid var(--main-color);
 
-  transform-origin: 0% 45vmin;
+  transform-origin: 0% calc( 40vmin + 2em );
   
   transform: rotate(90deg);
   
