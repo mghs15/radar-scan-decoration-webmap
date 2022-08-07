@@ -59,7 +59,7 @@ table.popup-table {
   position: absolute;
   right: 50%;
   top: 0%;
-  width: 2px;
+  width: 1px;
   height: 40vmin;
   background-color: var(--main-color);
   animation-duration: 2s;
@@ -76,7 +76,6 @@ table.popup-table {
   top: 0%;
   width: 20vmin;
   height: 40vmin;
-  border-right: 2px solid  var(--main-color);
   border-top-left-radius: 20vmin 10vmin;
   background-color: #FFFFFF;
 
@@ -440,13 +439,16 @@ map.on('move', () => {
   const str = `${Math.floor(cn.lat*sk)/sk}/${Math.floor(cn.lng*sk)/sk}`;
   document.getElementById("radar-info-lnglat").innerText = str;
   
-});
-
-map.on('rotate', () => {
   const zl = map.getZoom();
   const ber = map.getBearing();
   document.getElementById("radar-info-rot").innerHTML = `z ${Math.floor(zl*100)/100}<br>${Math.floor(ber*100)/100}°`;
   
+});
+
+map.on('rotate', () => {
+
+  const zl = map.getZoom();
+  const ber = map.getBearing();  
   document.getElementById("radar-north").style.transform = `rotate(${-ber}deg)`;
   
 });
