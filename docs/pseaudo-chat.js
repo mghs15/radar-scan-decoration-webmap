@@ -79,7 +79,13 @@ const messageBox = [
 
 const sendMessage = () => {
   
-  const yourMessage = document.getElementById("inputYourText").value;
+  let yourMessage = document.getElementById("inputYourText").value;
+  
+  yourMessage = yourMessage.replace(/&/g,"&amp;")
+    .replace(/"/g,"&quot;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/'/g, "&#39;");
   
   if(!yourMessage) return;
   
