@@ -19,3 +19,4 @@ https://mghs15.github.io/radar-scan-decoration-webmap/
 * https://maps.gsi.go.jp/vector/
 * https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 * https://www.modis.co.jp/candidate/insight/column_129
+* https://www.ipa.go.jp/security/vuln/websecurity-HTML-1_5.html#L3
