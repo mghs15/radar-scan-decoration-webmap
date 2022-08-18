@@ -45,6 +45,7 @@ table.popup-table {
 }
 
 #radar-case {
+  display: none;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -309,7 +310,8 @@ table.popup-table {
   transform-origin: 0% 40vmin;
 }
 
-#radar-jihoku {
+
+#radar-jihoku-line {
   position: absolute;
   top: calc( 50% - 40vmin );
   left: 50%;
@@ -319,6 +321,27 @@ table.popup-table {
   transform-origin: 0% 40vmin;
 }
 
+#radar-jihoku-needle {
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 2vmin;
+  height: 8vmin;
+  max-width: 12px;
+  max-height: 48px;
+  transform-origin: 50% 50%;
+}
+
+#radar-jihoku-needle img {
+  width: 2vmin;
+  height: 8vmin;
+  max-width: 12px;
+  max-height: 48px;
+}
 
 .radar-hatch-title {
   position: absolute;
@@ -376,21 +399,32 @@ table.popup-table {
   background-color: var(--main-color);
   color: #000000;
   cursor: pointer;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 #message-input {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 4px;
   position: absolute;
+  left: 110px;
   bottom: 0;
-  right: 0;
-  width: 80vmin;
+  width: calc( 100% - 110px );
   text-align: right;
 }
 
 #inputYourText {
   background-color: #000000;
   border-color: #000000;
+  width: 100%;
   color: var(--main-color);
 }
+
+#inputYourText:focus {
+  outline-width: 0;
+}
+
 
 #message-box {
   z-index: 10000;
@@ -412,29 +446,34 @@ table.popup-table {
 }
 
 #message-box .message-line {
-  width: 80vmin;
+  grid-template-columns: 80px calc( 80vmin - 160px - 40px ) 80px;
 }
 
+#messageBoxFooter {
+  position: absolute;
+  right: 40px;
+  text-align: right;
+}
 
+#messageBoxFooter span {
+  margin-left: 4px;
+}
+
+/*
 #reloadMessageBoxButton {
   position: fixed;
   bottom: 10%;
-  right: calc( 10vmin + 80px );
-  margin-top: 4px;
-  margin-left: auto;
-  margin-right: auto;
+  right: calc( 10vmin + 40px + 80px );
   width: 50px;
 }
 
 #closeMessageBoxButton {
   position: fixed;
   bottom: 10%;
-  right: 10vmin;
-  margin-top: 4px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 75px;
+  right: calc( 10vmin + 40px );
+  width: 76px;
 }
+*/
 
 </style>
 <body>
@@ -479,28 +518,35 @@ table.popup-table {
   <div id='radar-case6'></div>
   <div id='radar-line1'></div>
   <div id='radar-line2'></div>
-  <div id='radar-box'></div>
+  
   <div id='radar-north'></div>
-  <div id='radar-jihoku'></div>
+  <div id='radar-jihoku'>
+    <div id='radar-jihoku-line'></div>
+    <div id='radar-jihoku-needle'>
+      <img src ='./compass-needle.svg' alt=''/>
+    </div>
+  </div>
   <div id='radar-direction'></div>
+  <div id='radar-info-target'>---</div>
+  
   <div id='radar-info-rot'>---</div>
   <div id='radar-info-elev'>---</div>
   <div id='radar-info-lnglat'>---/---</div>
   <div id='radar-info-addr'>---</div>
   <div id='radar-info-time'>---</div>
-  <div id='radar-info-target'>---</div>
   <div id='radar-info-target2'>---</div>
   <div id='radar-info-debug'></div>
   
+  <div id='radar-box'></div>
   
 </div>
 
 <div id='message-info'>
   <div id='message-area'></div>
   <div id='message-input'>
-    <input type='text' id='inputYourText' name='inputYourText' value=''></input>
-    <span class='button' id='sendYourTextButton'>投稿</span>
-    <span class='button' id='showMessageBoxButton'>ログ</span>
+    <div><input type='text' id='inputYourText' name='inputYourText' value=''></input></div>
+    <div class='button' id='sendYourTextButton'>投稿</div>
+    <div class='button' id='showMessageBoxButton'>ログ</div>
   </div>
   <div id='message-box'></div>
 </div>
@@ -587,9 +633,17 @@ const setJihokuDirection = () => {
   const cn = map.getCenter();
   const mesh = get2ndMesh(cn.lat, cn.lng);
   const jh = getJihoku(mesh);
-  const ber = map.getBearing() + jh; 
-  document.getElementById("radar-jihoku").style.transform = `rotate(${-ber}deg)`;
   
+  if(!jh){
+    document.getElementById("radar-jihoku-line").style.display = "none";
+    document.getElementById("radar-jihoku-needle").style.display = "none";
+  }else{
+    const ber = map.getBearing() + jh; 
+    document.getElementById("radar-jihoku-line").style.transform = `rotate(${-ber}deg)`;
+    document.getElementById("radar-jihoku-line").style.display = "block";
+    document.getElementById("radar-jihoku-needle").style.transform = `rotate(${-ber}deg)`;
+    document.getElementById("radar-jihoku-needle").style.display = "block";
+  }
 }
 
 
@@ -797,6 +851,8 @@ map.on('load', () => {
   setJihokuDirection();
   setAddress();
   setElevation();
+  
+  document.getElementById("radar-case").style.display = "block";
   
   //message setup
   if(location.search.match(/message=1/)){

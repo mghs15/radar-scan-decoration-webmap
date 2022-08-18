@@ -113,8 +113,10 @@ const showMessageBox = () => {
   });
   
   if(html){
+    html += "<div id='messageBoxFooter'>";
     html += "<span class='button' id='reloadMessageBoxButton' onclick='showMessageBox();'>更新</span>";
     html += "<span class='button' id='closeMessageBoxButton' onclick='closeMessageBox();'>閉じる</span>";
+    html += "</div>";
     document.getElementById("message-box").innerHTML = html;
     document.getElementById("message-box").style.display = "block";
   }
