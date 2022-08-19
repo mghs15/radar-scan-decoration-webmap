@@ -45,7 +45,6 @@ table.popup-table {
 }
 
 #radar-case {
-  display: none;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -59,6 +58,7 @@ table.popup-table {
 }
 
 #radar-scan {
+  display: none;
   position: absolute;
   right: 50%;
   top: 0%;
@@ -74,6 +74,7 @@ table.popup-table {
 
 
 #radar-shadow {
+  display: none;
   position: absolute;
   right: 50%;
   top: 0%;
@@ -852,7 +853,8 @@ map.on('load', () => {
   setAddress();
   setElevation();
   
-  document.getElementById("radar-case").style.display = "block";
+  document.getElementById("radar-scan").style.display = "block";
+  document.getElementById("radar-shadow").style.display = "block";
   
   //message setup
   if(location.search.match(/message=1/)){
