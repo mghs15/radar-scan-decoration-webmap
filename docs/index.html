@@ -1068,7 +1068,12 @@ map.on('click', e => {
   
   
   //レンダリングされた地物を取得
-  const features = map.queryRenderedFeatures(e.point);
+  const sv = 3;
+  const bb = [
+    [e.point.x - sv, e.point.y - sv],
+    [e.point.x + sv, e.point.y + sv]
+  ];
+  const features = map.queryRenderedFeatures(bb);
   
   if (!features.length) {
     document.getElementById("radar-info-target2").innerHTML = `---`;
